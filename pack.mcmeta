@@ -1,0 +1,9 @@
+{
+  	"pack": {
+		"description": "KermitCraft Server Resource Pack",
+		"pack_format": 88,
+		"min_format": [15, 0],
+		"max_format": [88, 0],
+		"supported_formats": [15, 88]
+	}
+}
