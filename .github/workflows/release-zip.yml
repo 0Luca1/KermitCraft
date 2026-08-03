@@ -3,22 +3,28 @@ name: Auto Release ZIP
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-name: Create zip
+      - name: Create zip
+        id: pack
         run: |
-          zip -r project.zip ./*
+          zip -r project.zip . -x '.git*'
+          echo "sha1=$(sha1sum project.zip | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
 
-name: Create / update release
-        uses: softprops/action-gh-release@v1
+      - name: Create / update release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: Latest
           files: project.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            resource-pack-sha1=${{ steps.pack.outputs.sha1 }}
